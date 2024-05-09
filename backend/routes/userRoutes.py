@@ -21,6 +21,8 @@ def create_user(request: User):
 @user.post('/login')
 def login(request: OAuth2PasswordRequestForm = Depends()):
     access_token = authenticate_user(request.username, request.password)
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
     return {"access_token": access_token, "token_type": "bearer"}
 
 @user.get("/all", response_model=List[User])
